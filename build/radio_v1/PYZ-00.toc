@@ -1,4 +1,4 @@
-('C:\\radio\\build\\radio_v1\\PYZ-00.pyz',
+('C:\\Users\\mrfr4nk0\\Documents\\GitHub\\Franko-Radio\\build\\radio_v1\\PYZ-00.pyz',
  [('PIL',
    'C:\\Program Files\\Python313\\Lib\\site-packages\\PIL\\__init__.py',
    'PYMODULE'),
