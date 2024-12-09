@@ -105,9 +105,17 @@ def main():
 
     # Function to rotate knob and update the image
     def rotate_knob1(knob, rotation, direction, image_ref, knob_x, knob_y):
-        # Rotate the knob image by 36 degrees (5 possible positions, 360 / 10 = 36)
+        nonlocal knob1_rotation
+
+        # Calculate the new rotation angle
         new_rotation = (rotation + direction * 36) % 360
-        # Rotate without expanding
+
+        # Check if the new rotation is a valid step
+        if (rotation == 0 and new_rotation == 36) or (rotation == 36 and new_rotation == 0):
+            # Prevent direct jump from 10 (0 degrees) to 0 (36 degrees) and vice versa
+            return image_ref, rotation, image_ref
+
+        # Rotate the knob image
         rotated_image = knob_image.rotate(new_rotation, resample=Image.Resampling.BICUBIC)
 
         # Convert the rotated image to a Tkinter-compatible format
@@ -118,7 +126,10 @@ def main():
 
         # Update the knob image on the canvas at the same position (no shifting)
         canvas.itemconfig(knob, image=rotated_texture)
-        
+
+        # Update the global rotation state
+        knob1_rotation = new_rotation
+
         return rotated_texture, new_rotation, image_ref
     
     def rotate_knob2(knob, rotation, direction, image_ref, knob_x, knob_y):
