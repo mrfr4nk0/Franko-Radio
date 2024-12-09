@@ -22,10 +22,15 @@ CHANNELS = {
 # Volume levels (corresponding to knob positions)
 VOLUME_LEVELS = {
     1: 1.0,
-    2: 0.85,
-    3: 0.60,
-    4: 0.35,
-    5: 0.2
+    2: 0.9,
+    3: 0.8,
+    4: 0.7,
+    5: 0.6,
+    6: 0.5,
+    7: 0.4,
+    8: 0.3,
+    9: 0.2,
+    10: 0.1,
 }
 
 def main():
@@ -63,10 +68,10 @@ def main():
     canvas.create_image(0, 0, anchor="nw", image=background_image)
 
     # Place the knobs at the specified positions (X=119/2, Y=128/2)
-    knob1_x = (119 + 26.5) // 2
-    knob1_y = (128 + 26.5) // 2
-    knob2_x = (479 + 26.5) // 2
-    knob2_y = (128 + 26.5) // 2
+    knob1_x = (124 + 22) // 2
+    knob1_y = (134 + 22) // 2
+    knob2_x = (484 + 22) // 2
+    knob2_y = (134 + 22) // 2
 
     knob1_rotation = 0
     knob2_rotation = 0
@@ -100,8 +105,8 @@ def main():
 
     # Function to rotate knob and update the image
     def rotate_knob1(knob, rotation, direction, image_ref, knob_x, knob_y):
-        # Rotate the knob image by 72 degrees (5 possible positions, 360 / 5 = 72)
-        new_rotation = (rotation + direction * 72) % 360
+        # Rotate the knob image by 36 degrees (5 possible positions, 360 / 10 = 36)
+        new_rotation = (rotation + direction * 36) % 360
         # Rotate without expanding
         rotated_image = knob_image.rotate(new_rotation, resample=Image.Resampling.BICUBIC)
 
@@ -117,7 +122,7 @@ def main():
         return rotated_texture, new_rotation, image_ref
     
     def rotate_knob2(knob, rotation, direction, image_ref, knob_x, knob_y):
-        # Rotate the knob image by 72 degrees (6 possible positions, 360 / 6 = 60)
+        # Rotate the knob image by 60 degrees (6 possible positions, 360 / 6 = 60)
         new_rotation = (rotation + direction * 60) % 360
         # Rotate without expanding
         rotated_image = knob_image.rotate(new_rotation, resample=Image.Resampling.BICUBIC)
@@ -144,16 +149,26 @@ def main():
             knob1_image_ref, knob1_rotation, knob1_image_ref = rotate_knob1(knob1_img_id, knob1_rotation, direction, knob1_image_ref, knob1_x, knob1_y)
             
             # Update volume level based on the knob position (1 to 5, reversed)
-            if knob1_rotation == 72:
+            if knob1_rotation == 36:
                 set_volume(player, 1)
-            elif knob1_rotation == 144:
+            elif knob1_rotation == 72:
                 set_volume(player, 2)
-            elif knob1_rotation == 216:
+            elif knob1_rotation == 108:
                 set_volume(player, 3)
-            elif knob1_rotation == 288:
+            elif knob1_rotation == 144:
                 set_volume(player, 4)
-            elif knob1_rotation == 0:
+            elif knob1_rotation == 180:
                 set_volume(player, 5)
+            elif knob1_rotation == 216:
+                set_volume(player, 6)
+            elif knob1_rotation == 252:
+                set_volume(player, 7)
+            elif knob1_rotation == 288:
+                set_volume(player, 8)
+            elif knob1_rotation == 324:
+                set_volume(player, 9)
+            elif knob1_rotation == 0:
+                set_volume(player, 10)
 
         elif abs(event.x - knob2_x) < 50 and abs(event.y - knob2_y) < 50:
             # Reverse direction if needed
