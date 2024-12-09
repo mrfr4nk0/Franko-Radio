@@ -38,7 +38,7 @@ def main():
     player = vlc.MediaPlayer()
 
     # Set volume to 0 (lowest volume) at the start
-    set_volume(player, 5)  # This will set the volume to 0
+    set_volume(player, 10)  # This will set the volume to 0
 
     # Create the root window
     root = tk.Tk()
