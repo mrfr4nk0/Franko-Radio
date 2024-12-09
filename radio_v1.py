@@ -68,10 +68,10 @@ def main():
     canvas.create_image(0, 0, anchor="nw", image=background_image)
 
     # Place the knobs at the specified positions (X=119/2, Y=128/2)
-    knob1_x = (124 + 22) // 2
-    knob1_y = (134 + 22) // 2
-    knob2_x = (484 + 22) // 2
-    knob2_y = (134 + 22) // 2
+    knob1_x = (123 + 22) // 2
+    knob1_y = (133 + 22) // 2
+    knob2_x = (483 + 22) // 2
+    knob2_y = (133 + 22) // 2
 
     knob1_rotation = 0
     knob2_rotation = 0
