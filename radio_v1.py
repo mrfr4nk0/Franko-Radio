@@ -15,7 +15,8 @@ CHANNELS = {
     2: {"url": "https://icast.connectmedia.hu/5002/live.mp3", "name": "Retro Radio"},  # Position 2 (now channel 4)
     3: {"url": "https://icast.connectmedia.hu/5201/live.mp3", "name": "Radio 1"},  # Position 3 (now channel 3)
     4: {"url": "https://icast.connectmedia.hu/4738/mr2.mp3", "name": "Petofi Radio"},  # Position 4 (now channel 2)
-    5: None  # Position 5 (now channel 1) is disabled
+    5: {"url": "https://stream.danubiusradio.hu/danubius_320k", "name": "Danubius Radio"},  # Position 4 (now channel 2)
+    6: None  # Position 5 (now channel 1) is disabled
 }
 
 # Volume levels (corresponding to knob positions)
@@ -98,9 +99,26 @@ def main():
     radio_name_text = canvas.create_text(img_width // 2, 47, text="Select channel", font=custom_font, fill="red")
 
     # Function to rotate knob and update the image
-    def rotate_knob(knob, rotation, direction, image_ref, knob_x, knob_y):
+    def rotate_knob1(knob, rotation, direction, image_ref, knob_x, knob_y):
         # Rotate the knob image by 72 degrees (5 possible positions, 360 / 5 = 72)
         new_rotation = (rotation + direction * 72) % 360
+        # Rotate without expanding
+        rotated_image = knob_image.rotate(new_rotation, resample=Image.Resampling.BICUBIC)
+
+        # Convert the rotated image to a Tkinter-compatible format
+        rotated_texture = ImageTk.PhotoImage(rotated_image)
+
+        # Keep reference to prevent garbage collection
+        image_ref = rotated_texture
+
+        # Update the knob image on the canvas at the same position (no shifting)
+        canvas.itemconfig(knob, image=rotated_texture)
+        
+        return rotated_texture, new_rotation, image_ref
+    
+    def rotate_knob2(knob, rotation, direction, image_ref, knob_x, knob_y):
+        # Rotate the knob image by 72 degrees (6 possible positions, 360 / 6 = 60)
+        new_rotation = (rotation + direction * 60) % 360
         # Rotate without expanding
         rotated_image = knob_image.rotate(new_rotation, resample=Image.Resampling.BICUBIC)
 
@@ -123,7 +141,7 @@ def main():
         if abs(event.x - knob1_x) < 50 and abs(event.y - knob1_y) < 50:
             # Reverse direction if needed
             direction = -1 if event.delta > 0 else 1  # Inverse direction for correct clockwise/counterclockwise
-            knob1_image_ref, knob1_rotation, knob1_image_ref = rotate_knob(knob1_img_id, knob1_rotation, direction, knob1_image_ref, knob1_x, knob1_y)
+            knob1_image_ref, knob1_rotation, knob1_image_ref = rotate_knob1(knob1_img_id, knob1_rotation, direction, knob1_image_ref, knob1_x, knob1_y)
             
             # Update volume level based on the knob position (1 to 5, reversed)
             if knob1_rotation == 72:
@@ -140,18 +158,20 @@ def main():
         elif abs(event.x - knob2_x) < 50 and abs(event.y - knob2_y) < 50:
             # Reverse direction if needed
             direction = -1 if event.delta > 0 else 1  # Inverse direction for correct clockwise/counterclockwise
-            knob2_image_ref, knob2_rotation, knob2_image_ref = rotate_knob(knob2_img_id, knob2_rotation, direction, knob2_image_ref, knob2_x, knob2_y)
+            knob2_image_ref, knob2_rotation, knob2_image_ref = rotate_knob2(knob2_img_id, knob2_rotation, direction, knob2_image_ref, knob2_x, knob2_y)
 
             # Change channel based on the knob position (5 to 1)
             if knob2_rotation == 0:
                 stop_music()
-            elif knob2_rotation == 72:
+            elif knob2_rotation == 60:
+                change_channel(5)
+            elif knob2_rotation == 120:
                 change_channel(4)
-            elif knob2_rotation == 144:
+            elif knob2_rotation == 180:
                 change_channel(3)
-            elif knob2_rotation == 216:
+            elif knob2_rotation == 240:
                 change_channel(2)
-            elif knob2_rotation == 288:
+            elif knob2_rotation == 300:
                 change_channel(1)
 
     # Bind mouse wheel event to canvas for rotating the knobs
